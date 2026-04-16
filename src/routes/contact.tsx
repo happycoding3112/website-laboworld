@@ -36,8 +36,8 @@ function ContactPage() {
       <div className="mx-auto max-w-7xl px-6">
         {/* Header */}
         <div className="scroll-animate mb-16 text-center">
-          <h1 className="font-heading text-4xl font-extrabold text-foreground md:text-5xl">
-            Get In <span className="gradient-text">Touch</span>
+          <h1 className="font-heading text-4xl font-extrabold heading-gradient md:text-5xl">
+            Get In Touch
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-lg text-muted-foreground">
             Have a question or need a quote? We'd love to hear from you.
