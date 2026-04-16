@@ -22,8 +22,8 @@ function AboutPage() {
       <div className="mx-auto max-w-7xl px-6">
         {/* Header */}
         <div className="scroll-animate mb-16 text-center">
-          <h1 className="font-heading text-4xl font-extrabold text-foreground md:text-5xl">
-            About <span className="gradient-text">Laboworld</span>
+          <h1 className="font-heading text-4xl font-extrabold heading-gradient md:text-5xl">
+            About Laboworld
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
             Your trusted partner for laboratory supplies, committed to quality and reliability.

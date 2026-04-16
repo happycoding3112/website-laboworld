@@ -7,6 +7,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../components/ui/accordion";
+import { Molecule3D } from "../components/Molecule3D";
+import { FloatingAtoms3D } from "../components/FloatingAtoms3D";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -26,28 +28,18 @@ function HomePage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/70 to-background" />
 
-        {/* Floating elements */}
-        <div className="absolute left-[10%] top-[20%] animate-float">
-          <FlaskConical size={40} className="text-primary/30" />
-        </div>
-        <div className="absolute right-[15%] top-[30%] animate-float-delayed">
-          <Microscope size={36} className="text-accent/30" />
-        </div>
-        <div className="absolute left-[20%] bottom-[30%] animate-float-slow">
-          <TestTubes size={32} className="text-primary/20" />
-        </div>
+        {/* Ambient 3D molecule centerpiece */}
+        <Molecule3D className="absolute inset-0 z-0 opacity-70 pointer-events-none" />
 
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary backdrop-blur-sm">
             <FlaskConical size={16} />
             Trusted Laboratory Partner Since 2020
           </div>
 
-          <h1 className="font-heading text-4xl font-extrabold leading-tight tracking-tight text-foreground md:text-6xl lg:text-7xl">
-            Your Complete{" "}
-            <span className="gradient-text">Laboratory</span>{" "}
-            Solutions Provider
+          <h1 className="font-heading text-4xl font-extrabold leading-tight tracking-tight heading-gradient md:text-6xl lg:text-7xl">
+            Your Complete Laboratory Solutions Provider
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
@@ -73,7 +65,7 @@ function HomePage() {
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-scroll-bounce">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-scroll-bounce z-10">
           <ChevronDown size={28} className="text-muted-foreground" />
         </div>
       </section>
@@ -100,11 +92,12 @@ function HomePage() {
       </section>
 
       {/* Featured Products Preview */}
-      <section className="py-24">
-        <div className="mx-auto max-w-7xl px-6">
+      <section className="relative py-24 overflow-hidden">
+        <FloatingAtoms3D className="absolute inset-0 z-0 opacity-40 pointer-events-none" />
+        <div className="relative z-10 mx-auto max-w-7xl px-6">
           <div className="scroll-animate mb-16 text-center">
-            <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl">
-              What We <span className="gradient-text">Offer</span>
+            <h2 className="font-heading text-3xl font-bold heading-gradient md:text-4xl">
+              What We Offer
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
               Comprehensive laboratory solutions from chemicals to precision instruments.
@@ -142,8 +135,8 @@ function HomePage() {
       <section className="border-t border-border bg-card/30 py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="scroll-animate mb-16 text-center">
-            <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl">
-              Client <span className="gradient-text">Testimonials</span>
+            <h2 className="font-heading text-3xl font-bold heading-gradient md:text-4xl">
+              Client Testimonials
             </h2>
           </div>
 
@@ -178,8 +171,8 @@ function HomePage() {
               <HelpCircle size={16} />
               FAQ
             </div>
-            <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl">
-              Frequently Asked <span className="gradient-text">Questions</span>
+            <h2 className="font-heading text-3xl font-bold heading-gradient md:text-4xl">
+              Frequently Asked Questions
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
               Find answers to common questions about our products and services.
@@ -227,11 +220,12 @@ function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="py-24">
-        <div className="mx-auto max-w-3xl px-6 text-center">
+      <section className="relative py-24 overflow-hidden">
+        <Molecule3D className="absolute inset-0 z-0 opacity-25 pointer-events-none" />
+        <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
           <div className="scroll-animate glass-card rounded-2xl p-12">
-            <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl">
-              Ready to <span className="gradient-text">Get Started?</span>
+            <h2 className="font-heading text-3xl font-bold heading-gradient md:text-4xl">
+              Ready to Get Started?
             </h2>
             <p className="mx-auto mt-4 max-w-lg text-muted-foreground">
               Contact us today for a custom quote or to learn more about our products and services.

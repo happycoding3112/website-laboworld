@@ -61,8 +61,8 @@ function ProductsPage() {
       <div className="mx-auto max-w-7xl px-6">
         {/* Header */}
         <div className="scroll-animate mb-16 text-center">
-          <h1 className="font-heading text-4xl font-extrabold text-foreground md:text-5xl">
-            Our <span className="gradient-text">Products & Services</span>
+          <h1 className="font-heading text-4xl font-extrabold heading-gradient md:text-5xl">
+            Our Products & Services
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
             Everything your laboratory needs — from basic consumables to advanced analytical instruments.
