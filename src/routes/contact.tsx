@@ -3,7 +3,7 @@ import { useScrollAnimate } from "../hooks/useScrollAnimate";
 import { useTheme } from "../hooks/useTheme";
 import { MapPin, Phone, Mail, Clock, Send, Loader2 } from "lucide-react";
 import { useRef, useState } from "react";
-import { CONTACT } from "../lib/constants";
+import { CONTACT, WEB3FORMS_ACCESS_KEY } from "../lib/constants";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -16,8 +16,6 @@ export const Route = createFileRoute("/contact")({
   }),
   component: ContactPage,
 });
-
-const WEB3FORMS_ACCESS_KEY = import.meta.env.WEB3FORMS_ACCESS_KEY ?? "";
 const RATE_LIMIT_MS = 30_000; // 30 seconds between submissions
 
 const contactInfo = [
@@ -65,6 +63,11 @@ function ContactPage() {
     }
 
     formData.append("access_key", WEB3FORMS_ACCESS_KEY);
+
+    // Build a descriptive email subject line
+    const name = formData.get("name") || "Someone";
+    const topic = formData.get("Inquiry Subject") || "General Inquiry";
+    formData.append("subject", `Laboworld Inquiry: ${topic} — from ${name}`);
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
@@ -133,6 +136,10 @@ function ContactPage() {
                 {/* Honeypot field — hidden from real users, catches bots */}
                 <input type="checkbox" name="botcheck" className="hidden" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
 
+                {/* Web3Forms email customization */}
+                <input type="hidden" name="from_name" value="Laboworld India Website" />
+                <input type="hidden" name="replyto" value="email" />
+
                 {error && (
                   <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-4 py-3 text-sm text-destructive">
                     {error}
@@ -166,9 +173,19 @@ function ContactPage() {
                   <label className="mb-1.5 block text-sm font-medium text-foreground">Subject</label>
                   <input
                     required
-                    name="subject"
+                    name="Inquiry Subject"
                     type="text"
                     placeholder="Inquiry about..."
+                    className="w-full rounded-lg border border-border bg-input/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-foreground">Phone (optional)</label>
+                  <input
+                    name="Phone Number"
+                    type="tel"
+                    placeholder="+91 98765 43210"
                     className="w-full rounded-lg border border-border bg-input/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                 </div>
