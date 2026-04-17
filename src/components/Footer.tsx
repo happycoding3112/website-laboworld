@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { CONTACT } from "../lib/constants";
 
 export function Footer() {
   return (
@@ -62,19 +63,19 @@ export function Footer() {
             <div className="flex flex-col gap-3 text-sm text-muted-foreground">
               <div className="flex items-start gap-2">
                 <MapPin size={16} className="mt-0.5 shrink-0 text-primary" />
-                <span>Shop No. 1, Sai Siddhi, Nallasopara (W), Maharashtra, India</span>
+                <span>{CONTACT.address}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone size={16} className="shrink-0 text-primary" />
-                <span>+91 9326aborwd</span>
+                <span>{CONTACT.phone}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail size={16} className="shrink-0 text-primary" />
-                <span>laboworldindia@gmail.com</span>
+                <span>{CONTACT.email}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock size={16} className="shrink-0 text-primary" />
-                <span>Mon–Sat: 9 AM – 7 PM</span>
+                <span>{CONTACT.hoursShort}</span>
               </div>
             </div>
           </div>

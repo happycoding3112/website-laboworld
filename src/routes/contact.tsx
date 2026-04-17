@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useScrollAnimate } from "../hooks/useScrollAnimate";
-import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
-import { useState } from "react";
+import { useTheme } from "../hooks/useTheme";
+import { MapPin, Phone, Mail, Clock, Send, Loader2 } from "lucide-react";
+import { useRef, useState } from "react";
+import { CONTACT } from "../lib/constants";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -15,20 +17,81 @@ export const Route = createFileRoute("/contact")({
   component: ContactPage,
 });
 
+const WEB3FORMS_ACCESS_KEY = import.meta.env.WEB3FORMS_ACCESS_KEY ?? "";
+const RATE_LIMIT_MS = 30_000; // 30 seconds between submissions
+
 const contactInfo = [
-  { icon: MapPin, label: "Address", value: "Shop No. 1, Sai Siddhi, Nallasopara (W), Palghar, Maharashtra, India – 401203" },
-  { icon: Phone, label: "Phone", value: "+91 93269 XXXXX" },
-  { icon: Mail, label: "Email", value: "laboworldindia@gmail.com" },
-  { icon: Clock, label: "Hours", value: "Monday – Saturday: 9:00 AM – 7:00 PM" },
+  { icon: MapPin, label: "Address", value: CONTACT.address },
+  { icon: Phone, label: "Phone", value: CONTACT.phone },
+  { icon: Mail, label: "Email", value: CONTACT.email },
+  { icon: Clock, label: "Hours", value: CONTACT.hours },
 ];
 
 function ContactPage() {
   useScrollAnimate();
+  const { theme } = useTheme();
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const lastSubmitTime = useRef(0);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+
+    // Client-side rate limiting
+    const now = Date.now();
+    if (now - lastSubmitTime.current < RATE_LIMIT_MS) {
+      setError("Please wait before submitting again.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    // Honeypot check — if the hidden field is filled, it's a bot
+    if (formData.get("botcheck")) {
+      setSubmitted(true);
+      setLoading(false);
+      return;
+    }
+
+    if (!WEB3FORMS_ACCESS_KEY) {
+      setError("Contact form is not configured. Please contact us via email.");
+      setLoading(false);
+      return;
+    }
+
+    formData.append("access_key", WEB3FORMS_ACCESS_KEY);
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        setError(`Server error (${response.status}). Please try again later.`);
+        return;
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        lastSubmitTime.current = Date.now();
+        console.log("Contact form submitted successfully:", result);
+        setSubmitted(true);
+        form.reset();
+      } else {
+        setError(result.message || "Failed to send message. Please try again.");
+      }
+    } catch (err) {
+      console.error("Contact form error:", err);
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -67,11 +130,21 @@ function ContactPage() {
               <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                 <h2 className="font-heading text-xl font-bold text-foreground mb-2">Send us a Message</h2>
 
+                {/* Honeypot field — hidden from real users, catches bots */}
+                <input type="checkbox" name="botcheck" className="hidden" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
+
+                {error && (
+                  <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-4 py-3 text-sm text-destructive">
+                    {error}
+                  </div>
+                )}
+
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-foreground">Name</label>
                     <input
                       required
+                      name="name"
                       type="text"
                       placeholder="Your name"
                       className="w-full rounded-lg border border-border bg-input/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
@@ -81,6 +154,7 @@ function ContactPage() {
                     <label className="mb-1.5 block text-sm font-medium text-foreground">Email</label>
                     <input
                       required
+                      name="email"
                       type="email"
                       placeholder="your@email.com"
                       className="w-full rounded-lg border border-border bg-input/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
@@ -92,6 +166,7 @@ function ContactPage() {
                   <label className="mb-1.5 block text-sm font-medium text-foreground">Subject</label>
                   <input
                     required
+                    name="subject"
                     type="text"
                     placeholder="Inquiry about..."
                     className="w-full rounded-lg border border-border bg-input/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
@@ -102,6 +177,7 @@ function ContactPage() {
                   <label className="mb-1.5 block text-sm font-medium text-foreground">Message</label>
                   <textarea
                     required
+                    name="message"
                     rows={5}
                     placeholder="Tell us about your requirements..."
                     className="w-full resize-none rounded-lg border border-border bg-input/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
@@ -110,10 +186,11 @@ function ContactPage() {
 
                 <button
                   type="submit"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-all hover:brightness-110"
+                  disabled={loading}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-all hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  <Send size={16} />
-                  Send Message
+                  {loading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                  {loading ? "Sending..." : "Send Message"}
                 </button>
               </form>
             )}
@@ -135,12 +212,18 @@ function ContactPage() {
               </div>
             ))}
 
-            {/* Map placeholder */}
-            <div className="scroll-animate glass-card flex h-48 items-center justify-center rounded-xl">
-              <div className="text-center text-muted-foreground">
-                <MapPin size={32} className="mx-auto mb-2 text-primary/50" />
-                <p className="text-sm">Nallasopara (W), Maharashtra, India</p>
-              </div>
+            {/* Google Maps */}
+            <div className="scroll-animate glass-card overflow-hidden rounded-xl">
+              <iframe
+                title="Laboworld India Location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.9104292545658!2d73.82590189999999!3d18.487716!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bf5f3884d71d%3A0x83207133a4233cbc!2sLABOWORLD%20PRIVATE%20LIMITED%20(Dealers%20In%20Laboratory%20Chemicals%2C%20Instruments%2C%20Glassware%20and%20Consumables.!5e0!3m2!1sen!2sdk!4v1776386638754!5m2!1sen!2sdk"
+                width="100%"
+                height="220"
+                style={{ border: 0, filter: theme === "dark" ? "invert(1) hue-rotate(180deg) contrast(0.9) brightness(0.9)" : "none" }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
           </div>
         </div>
