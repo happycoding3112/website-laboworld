@@ -389,3 +389,279 @@
   box-shadow: 0 0 10px oklch(0.58 0.22 25 / 80%);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background-image:
+    linear-gradient(135deg, oklch(0.50 0.17 160 / 8%), transparent 30%, oklch(0.58 0.22 25 / 6%) 78%, transparent),
+    repeating-linear-gradient(90deg, oklch(0.50 0.17 160 / 4%) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(0deg, oklch(0.58 0.22 25 / 3%) 0 1px, transparent 1px 72px);
+  background-attachment: fixed;
+}
+
+.dark body {
+  background-image:
+    linear-gradient(135deg, oklch(0.60 0.16 160 / 10%), transparent 34%, oklch(0.62 0.22 25 / 8%) 82%, transparent),
+    repeating-linear-gradient(90deg, oklch(0.60 0.16 160 / 5%) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(0deg, oklch(0.62 0.22 25 / 4%) 0 1px, transparent 1px 72px);
+}
+
+::selection {
+  background: oklch(0.50 0.17 160 / 24%);
+}
+
+.glass-card {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(145deg, oklch(1 0 0 / 72%), oklch(0.96 0.008 230 / 46%)),
+    linear-gradient(120deg, oklch(0.50 0.17 160 / 8%), oklch(0.58 0.22 25 / 6%));
+  border-color: oklch(0.50 0.17 160 / 20%);
+  box-shadow:
+    0 20px 55px oklch(0.20 0.02 260 / 8%),
+    inset 0 1px 0 oklch(1 0 0 / 70%);
+  transform: translateZ(0);
+}
+
+.glass-card:hover {
+  border-color: oklch(0.50 0.17 160 / 38%);
+  box-shadow:
+    0 26px 70px oklch(0.50 0.17 160 / 14%),
+    inset 0 1px 0 oklch(1 0 0 / 75%);
+  transform: translateY(-4px) translateZ(0);
+}
+
+.dark .glass-card {
+  background:
+    linear-gradient(145deg, oklch(0.22 0.03 260 / 74%), oklch(0.16 0.03 260 / 46%)),
+    linear-gradient(120deg, oklch(0.60 0.16 160 / 12%), oklch(0.62 0.22 25 / 9%));
+  border-color: oklch(1 0 0 / 9%);
+  box-shadow:
+    0 22px 64px oklch(0 0 0 / 34%),
+    inset 0 1px 0 oklch(1 0 0 / 7%);
+}
+
+.dark .glass-card:hover {
+  border-color: oklch(0.60 0.16 160 / 36%);
+  box-shadow:
+    0 30px 80px oklch(0 0 0 / 42%),
+    0 0 42px oklch(0.60 0.16 160 / 10%),
+    inset 0 1px 0 oklch(1 0 0 / 10%);
+}
+
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(34px) scale(0.985);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.scroll-animate.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.hero-scrim {
+  background:
+    linear-gradient(90deg, oklch(0.96 0.008 230 / 96%) 0%, oklch(0.96 0.008 230 / 76%) 46%, oklch(0.96 0.008 230 / 92%) 100%),
+    linear-gradient(to bottom, oklch(0.96 0.008 230 / 76%) 0%, oklch(0.96 0.008 230 / 50%) 48%, var(--background) 100%);
+}
+
+.dark .hero-scrim {
+  background:
+    linear-gradient(90deg, oklch(0.16 0.03 260 / 96%) 0%, oklch(0.16 0.03 260 / 72%) 46%, oklch(0.16 0.03 260 / 92%) 100%),
+    linear-gradient(to bottom, oklch(0.16 0.03 260 / 72%) 0%, oklch(0.16 0.03 260 / 48%) 48%, var(--background) 100%);
+}
+
+.lab-grid-mask {
+  background-image:
+    linear-gradient(oklch(0.50 0.17 160 / 12%) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.58 0.22 25 / 10%) 1px, transparent 1px);
+  background-size: 58px 58px;
+  mask-image: linear-gradient(to bottom, black, transparent 82%);
+  opacity: 0.52;
+}
+
+.dark .lab-grid-mask {
+  opacity: 0.36;
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-enter {
+  animation: hero-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-enter-delay-1 {
+  animation-delay: 0.1s;
+}
+
+.hero-enter-delay-2 {
+  animation-delay: 0.2s;
+}
+
+.hero-enter-delay-3 {
+  animation-delay: 0.32s;
+}
+
+.signal-dot {
+  position: relative;
+  display: inline-flex;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 999px;
+  background: oklch(0.50 0.17 160);
+  box-shadow: 0 0 18px oklch(0.50 0.17 160 / 60%);
+}
+
+.signal-dot::after {
+  content: "";
+  position: absolute;
+  inset: -0.38rem;
+  border-radius: inherit;
+  border: 1px solid oklch(0.50 0.17 160 / 35%);
+  animation: signal-ping 2.2s ease-out infinite;
+}
+
+@keyframes signal-ping {
+  0% {
+    opacity: 0.8;
+    transform: scale(0.45);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+.scan-beam {
+  position: relative;
+  overflow: hidden;
+}
+
+.scan-beam::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, oklch(0.75 0.15 85 / 20%), transparent);
+  transform: translateX(-120%);
+  animation: scan-beam 4.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes scan-beam {
+  0%, 35% { transform: translateX(-120%); }
+  70%, 100% { transform: translateX(120%); }
+}
+
+.product-card {
+  isolation: isolate;
+}
+
+.product-card::after {
+  content: "";
+  position: absolute;
+  inset: auto 18px 18px 18px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, oklch(0.50 0.17 160 / 35%), oklch(0.58 0.22 25 / 24%), transparent);
+  transform: scaleX(0.25);
+  opacity: 0.55;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+.product-card:hover::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+.product-icon {
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 40%), 0 14px 30px oklch(0.50 0.17 160 / 14%);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.product-card:hover .product-icon {
+  transform: translateY(-2px) rotate(-3deg) scale(1.04);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 55%), 0 18px 38px oklch(0.58 0.22 25 / 18%);
+}
+
+.process-card {
+  position: relative;
+}
+
+.process-card::before {
+  content: "";
+  position: absolute;
+  left: 1.95rem;
+  top: 4.75rem;
+  bottom: -1.3rem;
+  width: 1px;
+  background: linear-gradient(to bottom, oklch(0.50 0.17 160 / 40%), transparent);
+}
+
+.process-card:last-child::before {
+  display: none;
+}
+
+.metric-bar {
+  position: relative;
+  height: 0.45rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: oklch(0.90 0.01 250 / 70%);
+}
+
+.dark .metric-bar {
+  background: oklch(0.30 0.03 260 / 80%);
+}
+
+.metric-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, oklch(0.50 0.17 160), oklch(0.75 0.15 85), oklch(0.58 0.22 25));
+  box-shadow: 0 0 18px oklch(0.50 0.17 160 / 32%);
+}
+
+.section-band {
+  background:
+    linear-gradient(135deg, oklch(0.93 0.012 230 / 70%), transparent 42%, oklch(0.75 0.15 85 / 10%)),
+    linear-gradient(0deg, oklch(1 0 0 / 48%), oklch(1 0 0 / 18%));
+}
+
+.dark .section-band {
+  background:
+    linear-gradient(135deg, oklch(0.22 0.03 260 / 72%), transparent 44%, oklch(0.62 0.22 25 / 10%)),
+    linear-gradient(0deg, oklch(0.14 0.03 260 / 62%), oklch(0.20 0.03 260 / 20%));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .scroll-animate {
+    opacity: 1;
+    transform: none;
+  }
+}
+
